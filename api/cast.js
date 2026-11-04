@@ -1,6 +1,6 @@
 // GET /api/cast?url=<full cast URL> or ?hash=0x...
 // Resolves any author's cast so the user can boost it.
-// URL lookup first (Neynar type=url handles warpcast.com, farcaster.xyz
+// URL lookup first (Neynar type=url handles farcaster.xyz and legacy warpcast.com
 // and short-hash share links that do NOT contain a full 0x hash), then
 // hash lookup as a fallback. Returns author/text/likes for the target card.
 const { neynar, json } = require('./lib');

@@ -124,7 +124,7 @@ function showGateMsg(t){const m=$('gateMsg'); m.textContent=t; m.style.display='
 async function checkApprovedAndShow(){
   const handle=localStorage.getItem('gl_handle'), savedFid=Number(localStorage.getItem('gl_fid'));
   if(!handle||!savedFid) return false;
-  // SECURITY: only a FID from the Warpcast context (global fid) may
+  // SECURITY: only a FID from the Farcaster context (global fid) may
   // open the app — a saved FID alone is not proof of ownership.
   if(!fid||fid!==savedFid) return false;
   try{const s=await api('/api/activate-status?fid='+savedFid+'&handle='+encodeURIComponent(handle));
@@ -141,7 +141,7 @@ function setStatus(t){$('status').textContent=t}
 function amounts(el,fn,cur,presets){
   // Build the chips ONCE and only toggle classes afterwards.
   // The old version rebuilt el.innerHTML on every tap, which made
-  // the whole chip row re-render in Warpcast's WebView and produced
+  // the whole chip row re-render in Farcaster's WebView and produced
   // the duplicated / flickering UI seen in the user's video when
   // tapping Amount chips. It also dropped the deposit presets on
   // re-render (deposit chips changed from [1,5,10,25,50] to the
@@ -176,7 +176,7 @@ async function getFid(){
   }catch(e){}
   // SECURITY: never trust a saved FID alone. A FID typed or stored in
   // this browser proves nothing — anyone can enter any public FID.
-  // Only a FID supplied by the Warpcast miniapp context is trusted.
+  // Only a FID supplied by the Farcaster miniapp context is trusted.
   return null;
 }
 async function loadUser(){
@@ -251,7 +251,7 @@ function showApprovalBox(url){
   }catch(e){
     const img=document.createElement('img'); img.src='https://api.qrserver.com/v1/create-qr-code/?size=280x280&bgcolor=ffffff&color=000000&data='+encodeURIComponent(url); img.style.width='100%'; img.style.height='auto'; img.style.display='block'; el.appendChild(img);
   }
-  $('btnDeeplink').onclick=async()=>{try{if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk} await sdk.actions.openUrl(url)}catch(e){setStatus('connect could not be opened here — scan the QR above with Warpcast instead.')}};
+  $('btnDeeplink').onclick=async()=>{try{if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk} await sdk.actions.openUrl(url)}catch(e){setStatus('connect could not be opened here — scan the QR above with Farcaster instead.')}};
 }
 function hideApprovalBox(){$('approvalBox').style.display='none'}
 async function startApproval(f){
@@ -354,7 +354,7 @@ let depAmt=5;
 function updateDepTotal(){const el=$('depTotal'); if(el) el.textContent='Total: '+(depAmt*0.01).toFixed(2)+' USDC for '+depAmt+' credit(s)'}
 amounts($('amountsD'),n=>{depAmt=n; updateDepTotal()},5,[1,5,10,25,50]);
 updateDepTotal();
-// Raw eth_sendTransaction helpers (Warpcast provider does NOT support
+// Raw eth_sendTransaction helpers (Farcaster provider does NOT support
 // the ethers signer methods eth_estimateGas / eth_gasPrice /
 // eth_getTransactionCount, and REQUIRES an explicit from address —
 // see the 2026-11-03 payment failures). Shared by Deposit and Get.
@@ -385,7 +385,7 @@ async function refreshCredit(){
 // so wrap: call refreshCredit whenever the app becomes visible).
 const _showApp0=showApp; showApp=function(){_showApp0(); refreshCredit(); updateAddButton(); promptAddMiniApp()};
 // Source of truth for 'has the user really added BOOST':
-// sdk.context.client.added (boolean, per Warpcast). Show the Add
+// sdk.context.client.added (boolean, per Farcaster). Show the Add
 // button ONLY when added is false, or when the client does not
 // report the flag at all (unknown -> show, safe fallback). Hide it
 // when added is true. Never rely on localStorage alone for this:
@@ -401,13 +401,13 @@ async function updateAddButton(){
     return false;
   }catch(e){ $('btnAddMiniapp').style.display=''; return false }
 }
-// First-time add prompt: sdk.actions.addMiniApp() shows Warpcast's
-// native 'Add' popup. In Warpcast, adding also enables notifications
+// First-time add prompt: sdk.actions.addMiniApp() shows Farcaster's
+// native 'Add' popup. In Farcaster, adding also enables notifications
 // for this app. It returns void and throws RejectedByUser if the user
 // declines, or InvalidDomainManifestJson if the manifest/domain do
 // not match (ours do: get-like-follow.vercel.app). Prompt only once
 // per device (localStorage flag) so it never nags on every open; the
-// manual 'Add BOOST to Warpcast' button above retries it on demand.
+// manual 'Add BOOST to Farcaster' button above retries it on demand.
 async function promptAddMiniApp(force){
   try{
     if(await updateAddButton() && !force) return false;
@@ -420,11 +420,11 @@ async function promptAddMiniApp(force){
   }catch(e){
     // Dismissed, or not inside a Farcaster client: stay silent on the
     // automatic prompt; the manual button reports its own result.
-    if(force) setStatus('Could not add BOOST here: '+e.message+' — open BOOST inside Warpcast to add it.');
+    if(force) setStatus('Could not add BOOST here: '+e.message+' — open BOOST inside Farcaster to add it.');
     return false;
   }
 }
-$('btnAddMiniapp').onclick=async()=>{if(await promptAddMiniApp(true)) setStatus('Thanks! If you confirmed the Warpcast popup, BOOST is now added and notifications are enabled.')};
+$('btnAddMiniapp').onclick=async()=>{if(await promptAddMiniApp(true)) setStatus('Thanks! If you confirmed the Farcaster popup, BOOST is now added and notifications are enabled.')};
 const SHARE_CAPTIONS=[
 "Your cast deserves more than 3 likes. BOOST it with real likes and followers ⚡",
 "Stop posting into the void. Get real likes and followers with BOOST — 1 credit = 1 like, 0.01 USDC.",
@@ -447,11 +447,11 @@ $('btnShare').onclick=async()=>{
     const text=SHARE_CAPTIONS[idx];
     localStorage.setItem('gl_last_share_caption',text);
     await sdk.actions.composeCast({text, embeds:['https://get-like-follow.vercel.app']});
-    setStatus('Composer opened — check the caption and the BOOST card, then tap Cast in Warpcast if it looks right.');
-  }catch(e){setStatus('Could not open the share composer: '+e.message+' — open BOOST inside Warpcast to share it.')}
+    setStatus('Composer opened — check the caption and the BOOST card, then tap Cast in Farcaster if it looks right.');
+  }catch(e){setStatus('Could not open the share composer: '+e.message+' — open BOOST inside Farcaster to share it.')}
 };
 // Also prompt shortly after first load (after ready()), so a brand-new
-// user sees the Warpcast add popup on their very first open, before
+// user sees the Farcaster add popup on their very first open, before
 // they even reach the Get Like flow. showApp() above re-checks the
 // same flag, so this never prompts twice.
 setTimeout(()=>{promptAddMiniApp()},1200);
@@ -469,7 +469,7 @@ async function runGetLike(){
   const r=await fetch('/api/get-likes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fid,castHash:selCast,amount:amt,quickAuthToken:qat})});
   const j=await r.json().catch(()=>({}));
   if(!r.ok){
-    if(r.status===401){setStatus('Authentication failed: please open BOOST inside Warpcast and try again.'); return}
+    if(r.status===401){setStatus('Authentication failed: please open BOOST inside Farcaster and try again.'); return}
     if(r.status===402 && j.error==='credit_required'){
       setStatus('Not enough credit: you need '+j.creditNeeded+' more credit(s) (Credit: '+j.credit+'). Tap + next to your credit (top right) to deposit, then tap Boost again.');
       // Update the top credit line from THIS response, not from a
@@ -504,12 +504,12 @@ $('btnDeposit').onclick=async()=>{
   try{
     if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
     const provider=await sdk.wallet.getEthereumProvider();
-    if(!provider) throw new Error('No wallet provider in this client. Open BOOST inside Warpcast.');
+    if(!provider) throw new Error('No wallet provider in this client. Open BOOST inside Farcaster.');
     const {ethers}=await import('https://esm.sh/ethers@5.7.2');
     const amountUnits=depAmt*10000;
     const usdcIface=new ethers.utils.Interface(['function approve(address,uint256) returns (bool)']);
     const boostIface=new ethers.utils.Interface(['function payForLikes(uint256,uint256,bytes32)']);
-    setStatus('Approve USDC '+(depAmt*0.01).toFixed(2)+'… (1 of 2) — Warpcast may warn about a new address on first approve, tap Continue anyway, then Confirm in your wallet');
+    setStatus('Approve USDC '+(depAmt*0.01).toFixed(2)+'… (1 of 2) — Farcaster may warn about a new address on first approve, tap Continue anyway, then Confirm in your wallet');
     const aHash=await sendTx(provider,USDC_BASE,usdcIface.encodeFunctionData('approve',[BOOST_CONTRACT,amountUnits]));
     await waitReceipt(aHash);
     setStatus('Depositing '+depAmt+' credit(s) for '+(depAmt*0.01).toFixed(2)+' USDC… (2 of 2) — confirm in your wallet');
@@ -533,7 +533,7 @@ $('btnGetFollow').onclick=async()=>{if(!fid)return alert('Please sign in first.'
   const r=await fetch('/api/get-followers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fid,amount:amtF,quickAuthToken:qat})});
   const j=await r.json().catch(()=>({}));
   if(!r.ok){
-    if(r.status===401){setStatus('Authentication failed: please open BOOST inside Warpcast and try again.'); return}
+    if(r.status===401){setStatus('Authentication failed: please open BOOST inside Farcaster and try again.'); return}
     if(r.status===402 && j.error==='credit_required'){
       setStatus('Not enough credit: you need '+j.creditNeeded+' more credit(s) (Credit: '+j.credit+'). Tap + next to your credit (top right) to deposit, then tap Boost again.');
       if(j.credit!==undefined) $('creditInfo').textContent='Credit: '+j.credit;

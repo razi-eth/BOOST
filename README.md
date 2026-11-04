@@ -1,7 +1,7 @@
 # BOOST — Get Like & Follow
 
 BOOST is a Farcaster miniapp for reciprocal likes and follows. Open it inside
-Warpcast, activate once (the approval opens in Warpcast), then use Get Like
+Farcaster, activate once (the approval opens in Farcaster), then use Get Like
 or Get Followers on your own casts.
 
 Live app: https://get-like-follow.vercel.app
@@ -16,12 +16,12 @@ Live app: https://get-like-follow.vercel.app
   1 credit per like or follower, 0.01 USDC each. Only successful
   likes/follows consume credit; failed or shortfall attempts consume nothing.
 - **Quick Auth gate.** `get-likes` and `get-followers` require a fresh
-  Warpcast Quick Auth token for the requesting FID. Unauthenticated calls
+  Farcaster Quick Auth token for the requesting FID. Unauthenticated calls
   return 401 and send nothing.
 - **Deposit.** Users deposit USDC on Base to the BoostPayment contract to
   buy credit. The owner can withdraw the contract balance manually.
-- **Share.** Sharing opens Warpcast's composer with a caption and the BOOST
-  card; nothing is posted until the user taps Cast in Warpcast.
+- **Share.** Sharing opens Farcaster's composer with a caption and the BOOST
+  card; nothing is posted until the user taps Cast in Farcaster.
 
 ## Stack
 

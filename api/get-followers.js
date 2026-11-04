@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
     const amount = Math.max(1, Number(req.body && req.body.amount) || 0);
     if (!fid || !amount) return json(res, 400, { error: 'fid_amount_required' });
     const authed = await verifyQuickAuth(req.body && req.body.quickAuthToken, fid);
-    if (!authed) return json(res, 401, { error: 'auth_required', detail: 'Quick Auth token missing or invalid for this FID. Open BOOST inside Warpcast.' });
+    if (!authed) return json(res, 401, { error: 'auth_required', detail: 'Quick Auth token missing or invalid for this FID. Open BOOST inside Farcaster.' });
     const approved = await poolApproved();
     const signers = approved.filter(s => s.fid !== fid).map(s => s.signerUuid);
     const deliverable = Math.min(amount, signers.length);

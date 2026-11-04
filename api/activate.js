@@ -7,7 +7,7 @@
 //      fid 256858) and register it via POST /v2/farcaster/signer/signed_key
 //      with sponsor { sponsored_by_neynar: true }.
 //   3. Neynar returns signer_approval_url, a farcaster://signed-key-request
-//      deeplink. The frontend opens it via sdk.actions.openUrl, so Warpcast
+//      deeplink. The frontend opens it via sdk.actions.openUrl, so Farcaster
 //      shows its native in-app "Connect App" screen (0 warps, sponsored)
 //      — never an external website.
 // The app signing key is ONLY read from server env vars set by the app
