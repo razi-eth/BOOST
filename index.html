@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BOOST</title>
+<meta property="og:title" content="BOOST">
+<meta property="og:description" content="Get real likes and followers. Deposit credit, boost your casts, and grow your Farcaster presence.">
+<meta property="og:image" content="https://get-like-follow.vercel.app/share.png">
+<meta name="fc:miniapp" content='{"version":"1","imageUrl":"https://get-like-follow.vercel.app/share.png","button":{"title":"Open","action":{"type":"launch_miniapp","name":"BOOST","url":"https://get-like-follow.vercel.app","splashImageUrl":"https://get-like-follow.vercel.app/splash.png","splashBackgroundColor":"#000000"}}}'>
+<meta name="fc:frame" content='{"version":"next","imageUrl":"https://get-like-follow.vercel.app/share.png","button":{"title":"Open","action":{"type":"launch_frame","name":"BOOST","url":"https://get-like-follow.vercel.app","splashImageUrl":"https://get-like-follow.vercel.app/splash.png","splashBackgroundColor":"#000000"}}}'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<style>
+body{font-family:'Kode Mono',monospace;font-size:13px;margin:0;background:#000;color:#f1f1f4;overflow-x:hidden}
+main{max-width:560px;margin:0 auto;padding:16px;overflow-x:hidden;box-sizing:border-box}
+h1{font-size:18px;margin:8px 0} h2{font-size:12px;margin:14px 0 8px;color:#aaa;letter-spacing:.02em}
+.card{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;padding:14px;margin:12px 0;box-shadow:none}
+button{font-family:'Kode Mono',monospace;border:0;border-radius:10px;padding:9px 13px;font-size:13px;background:#fff;color:#000;cursor:pointer;margin:4px 4px 4px 0}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.sec{background:#141414;color:#f1f1f4} button.sel{background:#fff;color:#000}
+button:disabled{opacity:.6}
+input{font-family:'Kode Mono',monospace;width:100%;box-sizing:border-box;border:1px solid #222;border-radius:10px;padding:9px;font-size:13px;background:#0a0a0a;color:#f1f1f4}
+#userRow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#btnGoDeposit{width:24px;height:24px;padding:0;margin:0;border-radius:6px;background:#fff;color:#000;font-size:20px;font-weight:700;line-height:1;flex-shrink:0}
+#avatar{width:42px;height:42px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.tabs{display:flex;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:4px;gap:4px}
+.tabs button{flex:1;margin:0;background:transparent;color:#ccc;font-weight:600}
+.tabs button.sel{background:#fff;color:#000}
+#target{border:2px solid #fff;border-radius:14px;padding:12px;background:#0a0a0a}
+#targetLabel{color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em;display:flex;justify-content:space-between}
+.likeIcon{font-size:16px;line-height:1;vertical-align:middle}
+#targetText{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;font-weight:600;margin-top:6px;font-size:13px}
+#target{overflow:hidden;overflow-wrap:anywhere;word-break:break-word}
+#changeCast{background:none;color:#fff;font-weight:700;padding:8px 0;font-size:13px}
+#castList{max-height:194px;overflow:auto;border:1px solid #222;border-radius:12px;padding:8px;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#333 transparent}
+#castList::-webkit-scrollbar{width:4px}
+#castList::-webkit-scrollbar-track{background:transparent}
+#castList::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+.cast{border:1px solid #222;border-radius:10px;padding:10px;margin:8px 0;cursor:pointer;background:#0a0a0a;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;max-width:100%;box-sizing:border-box}
+.cast.sel{border-color:#fff;background:#1a1a1a}
+.cast span{overflow-wrap:anywhere;word-break:break-word}
+#castList{overflow-x:hidden;max-width:100%}
+#status{white-space:pre-wrap;font-size:12px;color:#00ff41}
+#statusCard h2{color:#00ff41}
+.dot{width:6px;height:6px;border-radius:50%;background:#00ff41;display:inline-block;vertical-align:middle;margin-right:4px;animation:blink 2.5s ease-in-out infinite}
+#connLine{font-size:10px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.blinkSlow{animation:blinkSlow 2.5s ease-in-out infinite}
+@keyframes blinkSlow{0%,100%{opacity:1}50%{opacity:.25}}
+small{color:#aaa;font-size:12px}
+#gate{min-height:90vh;display:flex;align-items:center;justify-content:center}
+#gate button{font-size:17px;padding:12px 24px;border-radius:999px}
+#btnGetLike,#btnGetFollow{width:100%;padding:12px;font-size:14px;font-weight:700;border-radius:14px}
+</style></head><body>
+<div id="gate" style="flex-direction:column;gap:24px"><div id="gateMsg" style="display:none;width:100%;max-width:300px;text-align:center;font-size:14px;color:#aaa"></div><div id="approvalBox" style="display:none;width:100%;max-width:300px;text-align:center"><div style="font-weight:700;font-size:16px;margin-bottom:8px">Connect BOOST to your Farcaster account</div><div style="font-size:14px;color:#aaa;margin-bottom:16px">On a desktop? Scan the QR with your phone camera. On your phone? Tap connect.</div><div style="background:#000;padding:12px;box-sizing:border-box;position:relative"><div id="qrCode" style="background:#fff;padding:8px;line-height:0;max-width:240px;margin:0 auto;opacity:0;transition:opacity 2s ease"></div><button id="btnRevealQR" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;color:#000;border:0;padding:12px 20px;font-size:16px;border-radius:999px">Reveal QR</button></div><button id="btnDeeplink" style="display:block;margin:32px auto 0;width:75%;border:2px solid #fff;background:#000;color:#fff;font-size:18px;padding:12px;border-radius:0">connect</button><div style="font-size:14px;color:#aaa;margin-top:16px">You only need to connect once.</div></div></div>
+<main id="app" style="display:none">
+<div id="userRow">
+<div style="display:flex;align-items:center;gap:12px">
+<div id="avatar">?</div>
+<div><b id="userName">@…</b><br><small id="connLine"><span class="dot"></span>Connected</small></div>
+</div>
+<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+<div id="creditInfo" style="color:#00ff41;font-weight:700;font-size:12px;text-align:right;margin-right:12px">Credit: …</div>
+<button id="btnGoDeposit" title="Deposit credit">+</button>
+</div>
+</div>
+<div style="height:20px"></div>
+<button id="btnAddMiniapp" class="sec" style="margin:4px 0 0;display:none">＋ Add BOOST to Farcaster</button>
+<button id="btnShare" class="sec" style="margin:4px 0 0">↗ Share BOOST</button>
+<div id="shareResult" style="margin-top:6px;overflow-wrap:anywhere;word-break:break-all"></div>
+<div class="card" id="tabsCard" style="padding:6px">
+<div class="tabs">
+<button id="tabLike" class="sel">˗ˋˏ♡ˎˊ˗ Boost Cast</button>
+<button id="tabFollow">✌︎㋡ Boost Follower</button>
+</div>
+</div>
+<div id="paneLike">
+<div id="target">
+<div id="targetLabel"><span id="targetLabelText">LATEST CAST · SELECTED</span><span id="targetLikesWrap"><span class="likeIcon">♡゙</span> <span id="targetLikes">0</span></span></div>
+<div id="targetText">Loading latest cast…</div>
+</div>
+<button id="changeCast"><span class="blinkSlow">☞</span> Click to choose another cast ▾ <span class="blinkSlow">☜</span></button>
+<div id="castList" style="display:none"></div>
+<div style="margin-top:12px">
+<input id="castUrl" placeholder="Or paste a cast URL">
+<div id="castUrlError" style="color:#ff4444;font-size:12px;display:none;margin-top:8px;margin-left:14px">Cast not found</div>
+</div>
+<h2>Amount</h2>
+<div id="amounts"></div>
+<button id="btnGetLike">Boost</button>
+<p><small>Boost Cast uses your credit: 1 credit per Boost, 0.01 USDC each.</small></p>
+</div>
+<div id="paneFollow" style="display:none">
+<h2>Amount</h2>
+<div id="amountsF"></div>
+<button id="btnGetFollow">Boost</button>
+<p><small>Boost Followers uses your credit: 1 credit per follower, 0.01 USDC each.</small></p>
+</div>
+<div id="paneDeposit" style="display:none">
+<button id="btnBackDeposit" class="sec">← Back</button>
+<h2>Deposit Credit</h2>
+<div id="amountsD"></div>
+<div id="depTotal" style="font-weight:700;margin:8px 0">Total: 0.05 USDC for 5 credit(s)</div>
+<button id="btnDeposit" style="width:100%;padding:12px;font-size:14px;font-weight:700;border-radius:14px">Deposit Credit</button>
+<div id="depResult" style="margin-top:8px;overflow-wrap:anywhere;word-break:break-all"></div>
+<p><small>1 credit = 0.01 USDC on Base. Deposit first, then Boost Cast and Get Followers use your credit.</small></p>
+<p><small>Boost Cast and Get Followers use your credit: 1 credit per like or follower, 0.01 USDC each.</small></p>
+</div>
+<div class="card" id="statusCard"><h2>Status</h2><div id="status">Ready.</div></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let fid=null, selCast=null, selAuthor='', amt=5, amtF=10, sdk=null, myCasts=[], myApproved=false, approvalCancelled=false;
+async function callReady(){
+  try{
+    if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
+    await sdk.actions.ready();
+  }catch(e){}
+}
+callReady();
+function showApp(){callReady();$('gate').style.display='none';$('app').style.display='';refreshPool();loadMyCasts()}
+function showGateMsg(t){const m=$('gateMsg'); m.textContent=t; m.style.display=''}
+async function checkApprovedAndShow(){
+  const handle=localStorage.getItem('gl_handle'), savedFid=Number(localStorage.getItem('gl_fid'));
+  if(!handle||!savedFid) return false;
+  // SECURITY: only a FID from the Warpcast context (global fid) may
+  // open the app — a saved FID alone is not proof of ownership.
+  if(!fid||fid!==savedFid) return false;
+  try{const s=await api('/api/activate-status?fid='+savedFid+'&handle='+encodeURIComponent(handle));
+    if(s.status==='approved'){fid=savedFid;localStorage.setItem('gl_approved','1');showApp();return true}
+  }catch(e){}
+  return false;
+}
+document.addEventListener('visibilitychange',async()=>{
+  if(document.visibilityState==='visible' && $('gate').style.display!=='none'){
+    if(await checkApprovedAndShow()){hideApprovalBox()}
+  }
+});
+function setStatus(t){$('status').textContent=t}
+function amounts(el,fn,cur,presets){
+  // Build the chips ONCE and only toggle classes afterwards.
+  // The old version rebuilt el.innerHTML on every tap, which made
+  // the whole chip row re-render in Warpcast's WebView and produced
+  // the duplicated / flickering UI seen in the user's video when
+  // tapping Amount chips. It also dropped the deposit presets on
+  // re-render (deposit chips changed from [1,5,10,25,50] to the
+  // default [5,10,15,20,25,50] after the first tap).
+  presets=presets||[5,10,15,20,25,50];
+  el.innerHTML='';
+  const btns={};
+  presets.forEach(n=>{
+    const b=document.createElement('button'); b.textContent=n; b.className=n===cur?'sel':'sec';
+    b.onclick=()=>{fn(n); Object.entries(btns).forEach(([k,x])=>{x.className=(Number(k)===n)?'sel':'sec'}); const ci=el.querySelector('input'); if(ci) ci.value=''};
+    el.appendChild(b); btns[n]=b;
+  });
+  const c=document.createElement('input'); c.type='number'; c.min='1'; c.placeholder='Custom'; c.style.cssText='width:78px;display:inline-block;margin:4px 0 4px 4px;vertical-align:middle';
+  if(!presets.includes(cur)) c.value=cur;
+  c.oninput=()=>{const n=parseInt(c.value,10); if(n>0){fn(n); Object.entries(btns).forEach(([k,x])=>{x.className=(Number(k)===n)?'sel':'sec'})}};
+  c.onkeydown=e=>{if(e.key==='Enter') c.blur()};
+  el.appendChild(c);
+}
+amounts($('amounts'),n=>amt=n,5); amounts($('amountsF'),n=>amtF=n,10);
+async function api(p,opt){const r=await fetch(p,opt);const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
+async function refreshPool(){
+  // Pool count is still fetched for Get logic, but no longer displayed
+  // in the header (user asked to remove the pool pill and
+  // 'Pool: N user' from the header).
+  try{ await api('/api/pool'); }catch(e){}
+}
+async function getFid(){
+  if(fid) return fid;
+  try{
+    if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk;await sdk.actions.ready()}
+    const ctx=await sdk.context; if(ctx&&ctx.user&&ctx.user.fid){fid=ctx.user.fid; if(ctx.user.pfpUrl) window.__pfpUrl=ctx.user.pfpUrl; localStorage.setItem('gl_fid',fid);return fid}
+  }catch(e){}
+  // SECURITY: never trust a saved FID alone. A FID typed or stored in
+  // this browser proves nothing — anyone can enter any public FID.
+  // Only a FID supplied by the Warpcast miniapp context is trusted.
+  return null;
+}
+async function loadUser(){
+  if(!fid) return;
+  try{const j=await api('/api/casts?fid='+fid); /* casts endpoint returns author in items */ }catch(e){}
+  // Username comes from the cast list author; set it in loadMyCasts.
+}
+function setAvatar(pfpUrl, initial){
+  const av=$('avatar'); if(!av) return;
+  if(pfpUrl){
+    av.innerHTML=''; const img=document.createElement('img'); img.src=pfpUrl; img.alt=''; img.style.cssText='width:42px;height:42px;border-radius:50%;object-fit:cover;display:block';
+    img.onerror=()=>{av.innerHTML=''; av.textContent=initial||'?'}; av.appendChild(img);
+  } else { av.innerHTML=''; av.textContent=initial||'?'; }
+}
+function renderTarget(label){
+  $('targetLabelText').textContent=label;
+  $('targetLikes').textContent=window.__targetLikes||0;
+  $('targetLikesWrap').style.display='';
+  $('targetText').textContent=window.__targetText||'';
+  $('targetText').style.color='';
+}
+function selectCast(c, label){
+  selCast=c.hash; selAuthor=c.author||''; window.__targetText=c.text||c.hash; window.__targetLikes=c.likes||0;
+  $('btnGetLike').disabled=false;
+  // Label target selalu username saja, untuk semua cast (own, list, maupun URL).
+  renderTarget(label || (c.author ? '@'+c.author : 'Selected cast'));
+  [...$('castList').children].forEach(x=>x.classList.toggle('sel', x.dataset.hash===c.hash));
+  setStatus($('tabLike').className==='sel' ? 'Ready • Cast selected' : 'Ready');
+}
+async function loadMyCasts(){
+  if(!fid) return;
+  try{
+    const j=await api('/api/casts?fid='+fid); myCasts=j.casts||[];
+    const el=$('castList'); el.innerHTML='';
+    if(myCasts.length){
+      const a=myCasts[0].author||'';
+      $('userName').textContent='@'+a;
+      setAvatar((j.user && j.user.pfp_url) || (myCasts[0] && myCasts[0].pfp_url) || window.__pfpUrl, (a[0]||'?').toUpperCase());
+      myCasts.forEach(c=>{const d=document.createElement('div');d.className='cast';d.dataset.hash=c.hash;
+        d.innerHTML='<b>'+(c.author||'')+'</b> · <span class="likeIcon">♡゙</span> '+c.likes+'<br>'; const t=document.createElement('span'); t.textContent=c.text; d.appendChild(t);
+        d.onclick=()=>{selectCast(c); el.style.display='none'}; el.appendChild(d)});
+      if(!selCast) selectCast(myCasts[0]);
+    } else {
+      if(window.__pfpUrl) setAvatar(window.__pfpUrl, '?');
+      $('targetText').textContent='No casts yet. Paste a cast URL to boost another cast.';
+      $('btnGetLike').disabled=true;
+    }
+  }catch(e){$('targetText').textContent='Failed to load casts: '+e.message}
+}
+(async()=>{
+  const currentFid=await getFid();
+  if(currentFid){
+    try{const s=await api('/api/check-fid?fid='+currentFid);
+      if(s.status==='approved'){myApproved=true;localStorage.setItem('gl_approved','1');showApp();return}
+    }catch(e){}
+    const handle=localStorage.getItem('gl_handle'), savedFid=Number(localStorage.getItem('gl_fid'));
+    if(handle&&savedFid===currentFid){
+      try{const s=await api('/api/activate-status?fid='+savedFid+'&handle='+encodeURIComponent(handle));
+        if(s.status==='approved'){myApproved=true;localStorage.setItem('gl_approved','1');showApp();return}
+      }catch(e){}
+    }
+  }
+  await startApproval(currentFid);
+})();
+function showApprovalBox(url){
+  const box=$('approvalBox'); box.style.display=''; const el=$('qrCode'); el.innerHTML=''; el.style.opacity='0'; $('btnRevealQR').style.display='';
+  $('btnRevealQR').onclick=()=>{el.style.opacity='1'; $('btnRevealQR').style.display='none'};
+  try{
+    if(!window.qrcode) throw new Error('qr lib missing');
+    const qr=qrcode(0,'M'); qr.addData(url); qr.make(); el.innerHTML=qr.createSvgTag({cellSize:5,margin:8});
+    const svg=el.querySelector('svg'); if(svg){svg.style.width='100%';svg.style.height='auto';svg.style.display='block'}
+  }catch(e){
+    const img=document.createElement('img'); img.src='https://api.qrserver.com/v1/create-qr-code/?size=280x280&bgcolor=ffffff&color=000000&data='+encodeURIComponent(url); img.style.width='100%'; img.style.height='auto'; img.style.display='block'; el.appendChild(img);
+  }
+  $('btnDeeplink').onclick=async()=>{try{if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk} await sdk.actions.openUrl(url)}catch(e){setStatus('connect could not be opened here — scan the QR above with Warpcast instead.')}};
+}
+function hideApprovalBox(){$('approvalBox').style.display='none'}
+async function startApproval(f){
+  try{
+    if(!f) f=await getFid();
+    if(!f){showGateMsg('Open BOOST inside Farcaster to use it.'); return}
+    const handle=localStorage.getItem('gl_handle'), savedFid0=Number(localStorage.getItem('gl_fid'));
+    if(handle&&savedFid0===f){
+      try{const s=await api('/api/activate-status?fid='+f+'&handle='+encodeURIComponent(handle));
+        if(s.status==='approved'){myApproved=true;localStorage.setItem('gl_approved','1');showApp();return}
+      }catch(e){}
+    }
+    const j=await api('/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fid:f})});
+    if(j.already){myApproved=true;localStorage.setItem('gl_approved','1');showApp();return}
+    if(!j.approvalUrl){showGateMsg('Approval could not be started. Close and reopen BOOST to try again.'); return}
+    localStorage.setItem('gl_handle',j.handle); localStorage.setItem('gl_fid',f);
+    approvalCancelled=false; showApprovalBox(j.approvalUrl);
+    while(!approvalCancelled){
+      if(await checkApprovedAndShow()){hideApprovalBox(); return}
+      await new Promise(r=>setTimeout(r,3000));
+    }
+    hideApprovalBox();
+  }catch(e){hideApprovalBox(); showGateMsg('Approval failed. Close and reopen BOOST to try again.')}
+}
+$('tabLike').onclick=()=>{$('paneLike').style.display='';$('paneFollow').style.display='none';$('paneDeposit').style.display='none';$('tabsCard').style.display='';$('tabLike').className='sel';$('tabFollow').className=''; if(selCast && ($('status').textContent==='Cast selected.' || $('status').textContent==='Ready • Cast selected' || $('status').textContent==='Ready' || $('status').textContent==='Ready.')) setStatus('Ready • Cast selected')};
+$('tabFollow').onclick=()=>{$('paneLike').style.display='none';$('paneFollow').style.display='';$('paneDeposit').style.display='none';$('tabsCard').style.display='';$('tabLike').className='';$('tabFollow').className='sel'; if(selCast && ($('status').textContent==='Cast selected.' || $('status').textContent==='Ready • Cast selected' || $('status').textContent==='Ready.')) setStatus('Ready')};
+let depositFrom='like';
+$('btnGoDeposit').onclick=async()=>{
+  depositFrom = $('paneFollow').style.display==='' ? 'follow' : 'like';
+  $('tabsCard').style.display='none'; $('paneLike').style.display='none'; $('paneFollow').style.display='none';
+  $('paneDeposit').style.display='';
+  // Credit detection: only show the "deposit first" prompt when the
+  // user actually has 0 credit. If they already have credit (e.g.
+  // Credit: 10 in the header), do NOT overwrite the status with that
+  // prompt — the old code set it unconditionally, so it stayed stale
+  // even after a deposit. Fresh API read first, top-line text as fallback.
+  let cr=null;
+  try{const j=await api('/api/deposit?fid='+fid); cr=j.credit}catch(e){}
+  if(cr===null){const m=($('creditInfo').textContent||'').match(/(\d+)/); cr=m?Number(m[1]):null}
+  if(cr===0) setStatus('Deposit credit, then go back to Boost Cast.');
+  else if(cr!==null && $('status').textContent==='Deposit credit, then go back to Boost Cast.') setStatus('Ready.');
+};
+$('btnBackDeposit').onclick=()=>{
+  $('paneDeposit').style.display='none'; $('tabsCard').style.display='';
+  if(depositFrom==='follow'){ $('paneFollow').style.display=''; $('paneLike').style.display='none'; $('tabFollow').className='sel'; $('tabLike').className=''; }
+  else { $('paneLike').style.display=''; $('paneFollow').style.display='none'; $('tabLike').className='sel'; $('tabFollow').className=''; }
+};
+$('changeCast').onclick=()=>{const el=$('castList'); el.style.display = el.style.display==='none' ? '' : 'none'; if(el.style.display==='' && !myCasts.length) loadMyCasts()};
+let usingUrl=false, lastAutoUrl='';
+async function useCastUrl(){
+  if(usingUrl) return; usingUrl=true;
+  const errEl=$('castUrlError'); errEl.style.display='none';
+  const url=$('castUrl').value.trim();
+  if(!url){errEl.textContent='Please paste a cast URL.';errEl.style.color='#ff4444';errEl.style.display='';usingUrl=false;return}
+  setStatus('Looking up that cast…');
+  try{
+    const j=await api('/api/cast?url='+encodeURIComponent(url));
+    selectCast({hash:j.hash, author:j.author||'', text:j.text||j.hash, likes:j.likes||0}, j.author ? '@'+j.author : 'Cast from URL');
+    // Found: same inline spot, green text instead of red.
+    errEl.textContent='Cast found';errEl.style.color='#00ff41';errEl.style.display='';
+    setStatus('Using the cast from @'+(j.author||''));
+  }catch(e){
+    // No browser alert overlay — short red text beside the button instead,
+    // and the target card above is cleared so the old cast is not kept:
+    // plain red text 'choose valid cast', and no cast selected for Get.
+    errEl.textContent='Cast not found';errEl.style.color='#ff4444';errEl.style.display='';
+    selCast=null; selAuthor=''; window.__targetText='Choose a valid cast'; window.__targetLikes=0;
+    $('targetLabelText').textContent='';
+    $('targetLikes').textContent='';
+    $('targetLikesWrap').style.display='none';
+    $('targetText').textContent='Choose a valid cast';
+    $('targetText').style.color='#ff4444';
+    // Get Like cannot be tapped while no valid cast is selected.
+    $('btnGetLike').disabled=true;
+    [...$('castList').children].forEach(x=>x.classList.remove('sel'));
+    setStatus('Ready.');
+  }
+  $('castList').style.display='none';
+  usingUrl=false;
+}
+// Auto-detect after pasting: the 'Use this cast' button was removed,
+// pasting alone runs the lookup.
+// Paste fires before the value lands, so wait a tick; input debounce
+// also covers paste via mobile keyboards that only fire input.
+$('castUrl').addEventListener('paste',()=>setTimeout(()=>{
+  const u=$('castUrl').value.trim();
+  if(u && u!==lastAutoUrl){lastAutoUrl=u; useCastUrl()}
+},50));
+let castUrlTimer=null;
+$('castUrl').addEventListener('input',()=>{
+  clearTimeout(castUrlTimer);
+  castUrlTimer=setTimeout(()=>{
+    const u=$('castUrl').value.trim();
+    if(u.startsWith('http') && u!==lastAutoUrl){lastAutoUrl=u; useCastUrl()}
+  },700);
+});
+const BOOST_CONTRACT='0xbf167378bf1caafd414cb8b8cf76b1897907d888';
+const USDC_BASE='0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+let depAmt=5;
+function updateDepTotal(){const el=$('depTotal'); if(el) el.textContent='Total: '+(depAmt*0.01).toFixed(2)+' USDC for '+depAmt+' credit(s)'}
+amounts($('amountsD'),n=>{depAmt=n; updateDepTotal()},5,[1,5,10,25,50]);
+updateDepTotal();
+// Raw eth_sendTransaction helpers (Warpcast provider does NOT support
+// the ethers signer methods eth_estimateGas / eth_gasPrice /
+// eth_getTransactionCount, and REQUIRES an explicit from address —
+// see the 2026-11-03 payment failures). Shared by Deposit and Get.
+async function sendTx(provider,to,data){
+  const acc=await provider.request({method:'eth_requestAccounts'});
+  const from=Array.isArray(acc)?acc[0]:acc;
+  if(!from) throw new Error('Wallet did not return an account.');
+  const r=await provider.request({method:'eth_sendTransaction',params:[{from,to,data,value:'0x0',chainId:'0x2105'}]});
+  return typeof r==='string'?r:r.hash;
+}
+async function waitReceipt(hash){
+  for(let i=0;i<30;i++){
+    const r=await fetch('https://mainnet.base.org',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_getTransactionReceipt',params:[hash]})});
+    const j=await r.json();
+    if(j.result){
+      if(j.result.status!=='0x1') throw new Error('Transaction failed on-chain: '+hash);
+      return j.result;
+    }
+    await new Promise(x=>setTimeout(x,3000));
+  }
+  throw new Error('Transaction not confirmed yet: '+hash);
+}
+async function refreshCredit(){
+  if(!fid) return;
+  try{const j=await api('/api/deposit?fid='+fid); $('creditInfo').textContent='Credit: '+j.credit}catch(e){}
+}
+// Show credit balance once the app opens (showApp is defined above,
+// so wrap: call refreshCredit whenever the app becomes visible).
+const _showApp0=showApp; showApp=function(){_showApp0(); refreshCredit(); updateAddButton(); promptAddMiniApp()};
+// Source of truth for 'has the user really added BOOST':
+// sdk.context.client.added (boolean, per Warpcast). Show the Add
+// button ONLY when added is false, or when the client does not
+// report the flag at all (unknown -> show, safe fallback). Hide it
+// when added is true. Never rely on localStorage alone for this:
+// a user can add BOOST from another device and still see the button
+// here if we only checked our own flag.
+async function updateAddButton(){
+  try{
+    if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
+    const ctx=await sdk.context;
+    const added=ctx && ctx.client && ctx.client.added;
+    if(added===true){$('btnAddMiniapp').style.display='none'; return true}
+    $('btnAddMiniapp').style.display='';
+    return false;
+  }catch(e){ $('btnAddMiniapp').style.display=''; return false }
+}
+// First-time add prompt: sdk.actions.addMiniApp() shows Warpcast's
+// native 'Add' popup. In Warpcast, adding also enables notifications
+// for this app. It returns void and throws RejectedByUser if the user
+// declines, or InvalidDomainManifestJson if the manifest/domain do
+// not match (ours do: get-like-follow.vercel.app). Prompt only once
+// per device (localStorage flag) so it never nags on every open; the
+// manual 'Add BOOST to Warpcast' button above retries it on demand.
+async function promptAddMiniApp(force){
+  try{
+    if(await updateAddButton() && !force) return false;
+    if(!force && localStorage.getItem('gl_add_prompted')) return false;
+    localStorage.setItem('gl_add_prompted','1');
+    if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
+    await sdk.actions.addMiniApp();
+    $('btnAddMiniapp').style.display='none';
+    return true;
+  }catch(e){
+    // Dismissed, or not inside a Farcaster client: stay silent on the
+    // automatic prompt; the manual button reports its own result.
+    if(force) setStatus('Could not add BOOST here: '+e.message+' — open BOOST inside Warpcast to add it.');
+    return false;
+  }
+}
+$('btnAddMiniapp').onclick=async()=>{if(await promptAddMiniApp(true)) setStatus('Thanks! If you confirmed the Warpcast popup, BOOST is now added and notifications are enabled.')};
+const SHARE_CAPTIONS=[
+"Your cast deserves more than 3 likes. BOOST it with real likes and followers ⚡",
+"Stop posting into the void. Get real likes and followers with BOOST — 1 credit = 1 like, 0.01 USDC.",
+"New on Farcaster? BOOST gives you 5 free credit to start. Grow your casts the real way.",
+"Likes don't grow themselves. BOOST your next cast and watch real users show up.",
+"I just boosted my cast with BOOST — real likes, real followers, no debt, no fake numbers.",
+"Want followers who actually exist? BOOST connects you with real Farcaster users.",
+"Your best cast is one BOOST away from the audience it deserves.",
+"1 credit. 1 like. 0.01 USDC. That's the whole deal — BOOST.",
+"Grow on Farcaster without begging for engagement. BOOST does the reciprocal work for you.",
+"Post it. BOOST it. Watch real likes roll in.",
+"Farcaster growth, minus the fake numbers. Try BOOST — 5 free credit for new users.",
+"Don't let a good cast die at 0 likes. BOOST it."];
+$('btnShare').onclick=async()=>{
+  try{
+    if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
+    let idx=Math.floor(Math.random()*SHARE_CAPTIONS.length);
+    const last=localStorage.getItem('gl_last_share_caption');
+    if(SHARE_CAPTIONS.length>1 && SHARE_CAPTIONS[idx]===last) idx=(idx+1)%SHARE_CAPTIONS.length;
+    const text=SHARE_CAPTIONS[idx];
+    localStorage.setItem('gl_last_share_caption',text);
+    await sdk.actions.composeCast({text, embeds:['https://get-like-follow.vercel.app']});
+    setStatus('Composer opened — check the caption and the BOOST card, then tap Cast in Warpcast if it looks right.');
+  }catch(e){setStatus('Could not open the share composer: '+e.message+' — open BOOST inside Warpcast to share it.')}
+};
+// Also prompt shortly after first load (after ready()), so a brand-new
+// user sees the Warpcast add popup on their very first open, before
+// they even reach the Get Like flow. showApp() above re-checks the
+// same flag, so this never prompts twice.
+setTimeout(()=>{promptAddMiniApp()},1200);
+async function getQuickAuthToken(){
+ try{
+  if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
+  const t=await sdk.quickAuth.getToken();
+  return t && (t.token || t);
+ }catch(e){return null}
+}
+async function runGetLike(){
+ setStatus('Processing..');
+ try{
+  const qat=await getQuickAuthToken();
+  const r=await fetch('/api/get-likes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fid,castHash:selCast,amount:amt,quickAuthToken:qat})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){
+    if(r.status===401){setStatus('Authentication failed: please open BOOST inside Warpcast and try again.'); return}
+    if(r.status===402 && j.error==='credit_required'){
+      setStatus('Not enough credit: you need '+j.creditNeeded+' more credit(s) (Credit: '+j.credit+'). Tap + next to your credit (top right) to deposit, then tap Boost again.');
+      // Update the top credit line from THIS response, not from a
+      // re-fetch: Blob reads can lag ~20-30s and would show the old
+      // balance (the bug in Razi's 2026-11-03 screenshot: status said
+      // Credit 4 while the top line still showed 5).
+      if(j.credit!==undefined) $('creditInfo').textContent='Credit: '+j.credit;
+    } else setStatus('Failed: '+(j.error||('HTTP '+r.status)));
+    return;
+  }
+  setStatus('Done! Requested: '+j.requested+' · Succeeded: '+j.success+' · Failed: '+j.failed+' · Credit: '+(j.credit??''));
+  if(j.credit!==undefined) $('creditInfo').textContent='Credit: '+j.credit;
+  if(j.success>0){window.__targetLikes=(window.__targetLikes||0)+j.success; $('targetLikes').textContent=window.__targetLikes; $('targetLikesWrap').style.display=''}
+  try{const c=await api('/api/cast?hash='+encodeURIComponent(selCast)); if(c && typeof c.likes==='number' && c.likes>=(window.__targetLikes||0)){window.__targetLikes=c.likes; $('targetLikes').textContent=c.likes; $('targetLikesWrap').style.display=''}}catch(e){}
+ }catch(e){setStatus('Failed: '+e.message)}
+}
+$('btnGetLike').onclick=async()=>{
+  if(!fid||!selCast)return alert('Please select a cast first.');
+  const btn=$('btnGetLike'); btn.disabled=true; btn.style.opacity='0.5';
+  let dots=0; btn.textContent='Boosting';
+  const timer=setInterval(()=>{dots=(dots+1)%4; btn.textContent='Boosting'+'.'.repeat(dots);},400);
+  // Deposit-first: a single tap, no payment here. If credit is short
+  // the backend returns 402 credit_required and sends NO likes.
+  try{await runGetLike();} finally{clearInterval(timer); btn.disabled=false; btn.style.opacity=''; btn.textContent='Boost';}
+};
+$('btnDeposit').onclick=async()=>{
+  if(!fid)return alert('Please sign in first.');
+  const btn=$('btnDeposit'); btn.disabled=true;
+  let procDots=0; btn.textContent='Processing';
+  const procTimer=setInterval(()=>{procDots=(procDots+1)%4; btn.textContent='Processing'+'.'.repeat(procDots);},400);
+  if($('depResult')) $('depResult').innerHTML='';
+  try{
+    if(!sdk){sdk=(await import('https://esm.sh/@farcaster/miniapp-sdk')).sdk}
+    const provider=await sdk.wallet.getEthereumProvider();
+    if(!provider) throw new Error('No wallet provider in this client. Open BOOST inside Warpcast.');
+    const {ethers}=await import('https://esm.sh/ethers@5.7.2');
+    const amountUnits=depAmt*10000;
+    const usdcIface=new ethers.utils.Interface(['function approve(address,uint256) returns (bool)']);
+    const boostIface=new ethers.utils.Interface(['function payForLikes(uint256,uint256,bytes32)']);
+    setStatus('Approve USDC '+(depAmt*0.01).toFixed(2)+'… (1 of 2) — Warpcast may warn about a new address on first approve, tap Continue anyway, then Confirm in your wallet');
+    const aHash=await sendTx(provider,USDC_BASE,usdcIface.encodeFunctionData('approve',[BOOST_CONTRACT,amountUnits]));
+    await waitReceipt(aHash);
+    setStatus('Depositing '+depAmt+' credit(s) for '+(depAmt*0.01).toFixed(2)+' USDC… (2 of 2) — confirm in your wallet');
+    const pHash=await sendTx(provider,BOOST_CONTRACT,boostIface.encodeFunctionData('payForLikes',[fid,depAmt,ethers.constants.HashZero]));
+    await waitReceipt(pHash);
+    setStatus('Verifying deposit on Base…');
+    const j=await api('/api/deposit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fid,txHash:pHash})});
+    setStatus('Deposit done! +'+j.deposited+' credit(s) · Credit now: '+j.credit);
+    if($('depResult')) $('depResult').innerHTML='Deposit done! Tx: <a href="https://basescan.org/tx/'+pHash+'" target="_blank" rel="noopener" style="color:#00ff41">'+pHash+'</a>';
+    if(j.credit!==undefined) $('creditInfo').textContent='Credit: '+j.credit;
+  }catch(e){setStatus('Deposit cancelled or failed: '+e.message)}
+  finally{clearInterval(procTimer); btn.disabled=false; btn.textContent='Deposit Credit'}
+};
+$('btnGetFollow').onclick=async()=>{if(!fid)return alert('Please sign in first.');
+ const btn=$('btnGetFollow'); btn.disabled=true; btn.style.opacity='0.5';
+ let dots=0; btn.textContent='Boosting';
+ const timer=setInterval(()=>{dots=(dots+1)%4; btn.textContent='Boosting'+'.'.repeat(dots);},400);
+ setStatus('Processing..');
+ try{
+  const qat=await getQuickAuthToken();
+  const r=await fetch('/api/get-followers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fid,amount:amtF,quickAuthToken:qat})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){
+    if(r.status===401){setStatus('Authentication failed: please open BOOST inside Warpcast and try again.'); return}
+    if(r.status===402 && j.error==='credit_required'){
+      setStatus('Not enough credit: you need '+j.creditNeeded+' more credit(s) (Credit: '+j.credit+'). Tap + next to your credit (top right) to deposit, then tap Boost again.');
+      if(j.credit!==undefined) $('creditInfo').textContent='Credit: '+j.credit;
+    } else setStatus('Failed: '+(j.error||('HTTP '+r.status)));
+    return;
+  }
+  setStatus('Done! Requested: '+j.requested+' · Succeeded: '+j.success+' · Failed: '+j.failed+' · Credit: '+(j.credit??''));
+  if(j.credit!==undefined) $('creditInfo').textContent='Credit: '+j.credit;
+ }catch(e){setStatus('Failed: '+e.message)} finally{clearInterval(timer); btn.disabled=false; btn.style.opacity=''; btn.textContent='Boost'}};
+</script></body></html>
